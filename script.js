@@ -419,19 +419,30 @@ if (scrollContainer) {
   }, { passive: true });
 }
 
-// Background Video Observer (pauses background videos when scrolled away)
+// Background Video Observer (pauses background videos when scrolled away & enforces inline mobile playback)
 function setupVideoObserver() {
   const videos = document.querySelectorAll(".section-bg-video");
+
+  videos.forEach((video) => {
+    video.muted = true;
+    video.playsInline = true;
+    video.setAttribute("playsinline", "");
+    video.setAttribute("webkit-playsinline", "");
+  });
+
   if ("IntersectionObserver" in window) {
     const obs = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         if (entry.isIntersecting) {
-          entry.target.play().catch(() => {});
+          const playPromise = entry.target.play();
+          if (playPromise !== undefined) {
+            playPromise.catch(() => {});
+          }
         } else {
           entry.target.pause();
         }
       });
-    }, { threshold: 0.2 });
+    }, { threshold: 0.15 });
 
     videos.forEach((v) => obs.observe(v));
   }
