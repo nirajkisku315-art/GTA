@@ -1,299 +1,446 @@
 /**
- * ==============================================================================
- * NIRAJ — MINIMAL 3-SECTION VERTICAL SCROLL-SNAP PORTFOLIO
- * Features:
- * - 3D Mouse Parallax on 'NIRAJ' Hero Title (smooth lerp interpolation)
- * - Scroll-Snap Synchronization (Navbar links & right vertical indicator dots)
- * - Mobile Touch/Tap Support for Overlapping Creator Cards
- * - Seamless Video Loop / Graceful Fallback Handling
- * ==============================================================================
+ * ============================================================================
+ * GTA VI CLIPS — ULTRA-MINIMAL CORE SCRIPT
+ * Transparent Glass UI, YouTube Cinema Player, and Audio Sync
+ * ============================================================================
  */
 
-(function () {
-  'use strict';
-
-  // Cached DOM Elements
-  const scrollContainer = document.getElementById('scrollContainer');
-  const sections = document.querySelectorAll('.snap-section');
-  const navLinks = document.querySelectorAll('.nav-link');
-  const dotButtons = document.querySelectorAll('.dot-btn');
-  const hero3dWrapper = document.getElementById('hero3dWrapper');
-  const heroTitle = document.getElementById('heroTitle');
-  const creatorCards = document.querySelectorAll('.creator-card');
-
-  /* ----------------------------------------------------------------------------
-     1. 3D MOUSE PARALLAX ON HERO TITLE (Desktop Only via pointer: fine)
-     ---------------------------------------------------------------------------- */
-  let mouse = {
-    x: 0,
-    y: 0,
-    targetX: 0,
-    targetY: 0,
-  };
-
-  const windowHalfX = window.innerWidth / 2;
-  const windowHalfY = window.innerHeight / 2;
-  const pointerFineQuery = window.matchMedia('(pointer: fine)');
-  let parallaxRafId = null;
-
-  function onMouseMove(e) {
-    mouse.targetX = (e.clientX - windowHalfX) / windowHalfX;
-    mouse.targetY = (e.clientY - windowHalfY) / windowHalfY;
+/* ==========================================================================
+   1. CLIPS REPOSITORY (Replace or add YouTube Video IDs easily)
+   ========================================================================== */
+const CLIPS_DATA = [
+  {
+    id: "clip-1",
+    youtubeId: "QdBZY2fkU-0",
+    title: "Official Vice City High-Speed Highway Chase",
+    creatorTag: "@RockstarGames",
+    category: "viral-moments",
+    duration: "1:31"
+  },
+  {
+    id: "clip-2",
+    youtubeId: "VQRLujxTmAA",
+    title: "Hovercraft Mega Jump Across Vice Beach Pier",
+    creatorTag: "@ViceDrifter",
+    category: "insane-stunts",
+    duration: "0:52"
+  },
+  {
+    id: "clip-3",
+    youtubeId: "Wn6r38sHwZ0",
+    title: "Alligator Steals Beer In Convenience Store (AI Fail)",
+    creatorTag: "@FloridaManGaming",
+    category: "funny-fails",
+    duration: "0:44"
+  },
+  {
+    id: "clip-4",
+    youtubeId: "kLg5S9Q2y4Y",
+    title: "Streamer Finds Secret Underwater Military Bunker",
+    creatorTag: "@Tfue",
+    category: "top-creators",
+    duration: "2:14"
+  },
+  {
+    id: "clip-5",
+    youtubeId: "HqU9Jg4c8Xg",
+    title: "5-Star Police Pursuit Down Ocean Drive In Muscle Car",
+    creatorTag: "@NeonOutlaw",
+    category: "viral-moments",
+    duration: "1:48"
+  },
+  {
+    id: "clip-6",
+    youtubeId: "3v8v9d7a2y0",
+    title: "Rooftop Motorbike Backflip Into Moving Cargo Yacht",
+    creatorTag: "@StuntMasterVice",
+    category: "insane-stunts",
+    duration: "0:38"
+  },
+  {
+    id: "clip-7",
+    youtubeId: "7qJ4g6m1o3a",
+    title: "Cruiser Launches Into Orbit After Hitting Traffic Cone",
+    creatorTag: "@GlitchesAndGiggles",
+    category: "funny-fails",
+    duration: "0:29"
+  },
+  {
+    id: "clip-8",
+    youtubeId: "4kR2w8y9p0x",
+    title: "xQc Loses It Over Next-Gen Ocean Wave Dynamics",
+    creatorTag: "@xQcOW",
+    category: "top-creators",
+    duration: "1:15"
+  },
+  {
+    id: "clip-9",
+    youtubeId: "9bZkp7q19f0",
+    title: "Threading The Needle: Flying Helicopter Through Tunnel",
+    creatorTag: "@AeroAce",
+    category: "insane-stunts",
+    duration: "0:47"
+  },
+  {
+    id: "clip-10",
+    youtubeId: "6f5a3b2c1d0",
+    title: "Malibu Club Neon Heist Shootout Cinematic",
+    creatorTag: "@ViceCityCinematics",
+    category: "viral-moments",
+    duration: "2:05"
+  },
+  {
+    id: "clip-11",
+    youtubeId: "2n3m4k5l6p7",
+    title: "Pedestrian Parallel Parking Disaster In Vice Marina",
+    creatorTag: "@RagdollKing",
+    category: "funny-fails",
+    duration: "0:35"
+  },
+  {
+    id: "clip-12",
+    youtubeId: "5j8h7g6f5d4",
+    title: "Shroud 60FPS Sniping Test From 200MPH Speedboat",
+    creatorTag: "@shroud",
+    category: "top-creators",
+    duration: "1:52"
   }
+];
 
-  // Smooth lerp loop with requestAnimationFrame (runs strictly on Desktop PC)
-  function render3dParallax() {
-    if (!pointerFineQuery.matches) return;
+/* ==========================================================================
+   2. DOM ELEMENTS
+   ========================================================================== */
+const gtaAudio = document.getElementById("gta-audio");
+const musicToggleBtn = document.getElementById("music-toggle");
+const musicStateLabel = document.getElementById("music-state-label");
 
-    mouse.x += (mouse.targetX - mouse.x) * 0.08;
-    mouse.y += (mouse.targetY - mouse.y) * 0.08;
+const clipsGrid = document.getElementById("clips-grid");
+const filterPills = document.querySelectorAll(".c-pill[data-category]");
+const clipSearchInput = document.getElementById("clip-search-input");
+const noResultsState = document.getElementById("no-results-state");
+const resetFilterBtn = document.getElementById("reset-filter-btn");
 
-    if (hero3dWrapper) {
-      const rotX = -mouse.y * 18; // Max 18 deg tilt on X
-      const rotY = mouse.x * 22;  // Max 22 deg tilt on Y
-      const transZ = 20;
+// Cinema Modal
+const cinemaModal = document.getElementById("cinema-modal");
+const modalBackdrop = document.getElementById("modal-backdrop");
+const modalCloseBtn = document.getElementById("modal-close-btn");
+const youtubePlayerFrame = document.getElementById("youtube-player-frame");
+const modalClipTitle = document.getElementById("modal-clip-title");
+const modalCreatorTag = document.getElementById("modal-creator-tag");
+const modalShareBtn = document.getElementById("modal-share-btn");
+const modalYoutubeLink = document.getElementById("modal-youtube-link");
 
-      hero3dWrapper.style.transform = `perspective(1000px) rotateX(${rotX}deg) rotateY(${rotY}deg) translateZ(${transZ}px)`;
+// Toast
+const toastBox = document.getElementById("toast-box");
+const toastMessage = document.getElementById("toast-message");
+let toastTimer = null;
 
-      // Dynamic deep blood-red rim light & distressed shadow shift on The Batman title
-      if (heroTitle) {
-        const shadowX = -mouse.x * 20;
-        const shadowY = -mouse.y * 20 + 15;
-        heroTitle.style.filter = `drop-shadow(${shadowX}px ${shadowY}px 35px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 50px rgba(229, 9, 20, 0.55))`;
-      }
+// State Tracking
+let activeCategory = "all";
+let searchQuery = "";
+let currentClip = null;
+let wasMusicPlayingBeforeModal = false;
+
+/* ==========================================================================
+   3. AUDIO PLAYER (gta-music.mp3)
+   ========================================================================== */
+function setMusicPlayingState(isPlaying) {
+  if (isPlaying) {
+    musicToggleBtn.classList.add("playing");
+    musicStateLabel.textContent = "ON AIR";
+  } else {
+    musicToggleBtn.classList.remove("playing");
+    musicStateLabel.textContent = "RADIO";
+  }
+}
+
+async function toggleRadioAudio() {
+  if (!gtaAudio) return;
+  if (gtaAudio.paused) {
+    try {
+      await gtaAudio.play();
+      setMusicPlayingState(true);
+    } catch (e) {
+      showToast("Tap again to play audio");
     }
-
-    parallaxRafId = requestAnimationFrame(render3dParallax);
+  } else {
+    gtaAudio.pause();
+    setMusicPlayingState(false);
   }
+}
 
-  function setupParallax() {
-    if (pointerFineQuery.matches) {
-      // Desktop PC: Enable smooth 3D mouse parallax
-      window.addEventListener('mousemove', onMouseMove, { passive: true });
-      if (!parallaxRafId) {
-        render3dParallax();
-      }
-    } else {
-      // Touchscreens / Mobile / Tablet: Cleanly disable mouse-move tilt to keep touch scroll buttery smooth
-      window.removeEventListener('mousemove', onMouseMove);
-      if (parallaxRafId) {
-        cancelAnimationFrame(parallaxRafId);
-        parallaxRafId = null;
-      }
-      if (hero3dWrapper) {
-        hero3dWrapper.style.transform = 'none';
-      }
-      if (heroTitle) {
-        heroTitle.style.filter = 'drop-shadow(0 12px 28px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 40px rgba(229, 9, 20, 0.5))';
-      }
-    }
+if (musicToggleBtn) {
+  musicToggleBtn.addEventListener("click", toggleRadioAudio);
+}
+
+/* ==========================================================================
+   4. RENDER COMPACT CLIPS GRID
+   ========================================================================== */
+function renderClips(clips) {
+  if (!clipsGrid) return;
+  clipsGrid.innerHTML = "";
+
+  if (clips.length === 0) {
+    if (noResultsState) noResultsState.style.display = "block";
+    return;
   }
+  if (noResultsState) noResultsState.style.display = "none";
 
-  // Initialize and listen for responsive device pointer mode changes
-  setupParallax();
-  if (typeof pointerFineQuery.addEventListener === 'function') {
-    pointerFineQuery.addEventListener('change', setupParallax);
-  } else if (typeof pointerFineQuery.addListener === 'function') {
-    pointerFineQuery.addListener(setupParallax);
-  }
+  const fragment = document.createDocumentFragment();
 
+  clips.forEach((clip) => {
+    const card = document.createElement("div");
+    card.className = "compact-clip-card";
+    card.setAttribute("tabindex", "0");
+    card.setAttribute("role", "button");
+    card.setAttribute("aria-label", clip.title);
 
-  /* ----------------------------------------------------------------------------
-     2. VERTICAL SCROLL-SNAP & NAVIGATION SYNCHRONIZATION
-     ---------------------------------------------------------------------------- */
-  let currentActiveIndex = 0;
+    const primaryThumb = `https://img.youtube.com/vi/${clip.youtubeId}/hqdefault.jpg`;
 
-  function updateActiveNavigation(index) {
-    if (index === currentActiveIndex) return;
-    currentActiveIndex = index;
+    card.innerHTML = `
+      <div class="compact-thumb-wrap">
+        <img 
+          src="${primaryThumb}" 
+          alt="${clip.title}" 
+          class="compact-thumb-img" 
+          loading="lazy"
+        >
+        <div class="compact-play-icon"><i class="fa-solid fa-play"></i></div>
+        <span class="compact-duration">${clip.duration}</span>
+      </div>
+      <div class="compact-card-body">
+        <span class="compact-clip-title" title="${clip.title}">${clip.title}</span>
+        <div class="compact-creator-row">
+          <span class="compact-creator-tag">${clip.creatorTag}</span>
+          <button class="compact-share-btn" title="Share clip" aria-label="Share clip">
+            <i class="fa-solid fa-share-nodes"></i>
+          </button>
+        </div>
+      </div>
+    `;
 
-    // Update Navbar Links
-    navLinks.forEach((link, i) => {
-      link.classList.toggle('active', i === index);
+    // Click card to open modal
+    card.addEventListener("click", (e) => {
+      if (e.target.closest(".compact-share-btn")) {
+        e.stopPropagation();
+        shareClip(clip);
+        return;
+      }
+      openCinemaModal(clip);
     });
 
-    // Update Right Indicator Dots
-    dotButtons.forEach((dot, i) => {
-      dot.classList.toggle('active', i === index);
-    });
-  }
-
-  // Detect which section is currently snapped/visible
-  if (scrollContainer) {
-    scrollContainer.addEventListener('scroll', () => {
-      const scrollTop = scrollContainer.scrollTop;
-      const sectionHeight = window.innerHeight;
-      const index = Math.round(scrollTop / sectionHeight);
-
-      if (index >= 0 && index < sections.length) {
-        updateActiveNavigation(index);
+    card.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        openCinemaModal(clip);
       }
-    }, { passive: true });
-  }
-
-  // Click handler for Navbar links and Indicator dots
-  function scrollToSection(index) {
-    if (sections[index]) {
-      sections[index].scrollIntoView({ behavior: 'smooth' });
-    }
-  }
-
-  navLinks.forEach((link) => {
-    link.addEventListener('click', (e) => {
-      e.preventDefault();
-      const index = parseInt(link.getAttribute('data-index') || '0', 10);
-      scrollToSection(index);
     });
+
+    fragment.appendChild(card);
   });
 
-  dotButtons.forEach((dot) => {
-    dot.addEventListener('click', () => {
-      const index = parseInt(dot.getAttribute('data-index') || '0', 10);
-      scrollToSection(index);
-    });
+  clipsGrid.appendChild(fragment);
+}
+
+/* ==========================================================================
+   5. FILTERING & SEARCH
+   ========================================================================== */
+function applyFilterAndSearch() {
+  const query = searchQuery.trim().toLowerCase();
+
+  const filtered = CLIPS_DATA.filter((clip) => {
+    const matchesCat = activeCategory === "all" || clip.category === activeCategory;
+    const matchesQuery =
+      query === "" ||
+      clip.title.toLowerCase().includes(query) ||
+      clip.creatorTag.toLowerCase().includes(query);
+    return matchesCat && matchesQuery;
   });
 
+  renderClips(filtered);
+}
 
-  /* ----------------------------------------------------------------------------
-     3. INTERACTIVE TOUCH / TAP BEHAVIOR FOR OVERLAPPING CREATOR CARDS
-     ---------------------------------------------------------------------------- */
-  creatorCards.forEach((card) => {
-    card.addEventListener('click', (e) => {
-      // If clicking directly on an anchor link inside, let it navigate
-      if (e.target.closest('a')) return;
+// Category filter pills
+filterPills.forEach((pill) => {
+  pill.addEventListener("click", () => {
+    filterPills.forEach((p) => p.classList.remove("active"));
+    pill.classList.add("active");
+    activeCategory = pill.dataset.category;
+    applyFilterAndSearch();
+  });
+});
 
-      const isActive = card.classList.contains('is-active');
-      // Remove active state from other cards
-      creatorCards.forEach(c => c.classList.remove('is-active'));
+// Search input
+if (clipSearchInput) {
+  clipSearchInput.addEventListener("input", (e) => {
+    searchQuery = e.target.value;
+    applyFilterAndSearch();
+  });
+}
 
-      // Toggle current card
-      if (!isActive) {
-        card.classList.add('is-active');
+// Reset button
+if (resetFilterBtn) {
+  resetFilterBtn.addEventListener("click", () => {
+    activeCategory = "all";
+    searchQuery = "";
+    if (clipSearchInput) clipSearchInput.value = "";
+    filterPills.forEach((p) => {
+      p.classList.toggle("active", p.dataset.category === "all");
+    });
+    applyFilterAndSearch();
+  });
+}
+
+/* ==========================================================================
+   6. CINEMA YOUTUBE MODAL (With Music Auto-Pause / Resume)
+   ========================================================================== */
+function openCinemaModal(clip) {
+  currentClip = clip;
+
+  // 1. AUTO-PAUSE GTA-MUSIC.MP3 IF PLAYING
+  if (gtaAudio && !gtaAudio.paused) {
+    wasMusicPlayingBeforeModal = true;
+    gtaAudio.pause();
+    setMusicPlayingState(false);
+  } else {
+    wasMusicPlayingBeforeModal = false;
+  }
+
+  // 2. Set modal content
+  modalClipTitle.textContent = clip.title;
+  modalCreatorTag.textContent = clip.creatorTag;
+  modalYoutubeLink.href = `https://www.youtube.com/watch?v=${clip.youtubeId}`;
+  youtubePlayerFrame.src = `https://www.youtube.com/embed/${clip.youtubeId}?autoplay=1&rel=0&modestbranding=1`;
+
+  // 3. Display modal
+  cinemaModal.style.display = "flex";
+  void cinemaModal.offsetWidth;
+  cinemaModal.classList.add("active");
+}
+
+function closeCinemaModal() {
+  if (!cinemaModal.classList.contains("active")) return;
+
+  // 1. Clear iframe src to STOP video immediately
+  youtubePlayerFrame.src = "";
+  cinemaModal.classList.remove("active");
+
+  setTimeout(() => {
+    cinemaModal.style.display = "none";
+  }, 250);
+
+  // 2. RESUME GTA-MUSIC.MP3 IF PLAYING BEFORE OPENING MODAL
+  if (wasMusicPlayingBeforeModal && gtaAudio) {
+    gtaAudio.play().then(() => {
+      setMusicPlayingState(true);
+    }).catch(() => {});
+    wasMusicPlayingBeforeModal = false;
+  }
+}
+
+if (modalCloseBtn) modalCloseBtn.addEventListener("click", closeCinemaModal);
+if (modalBackdrop) modalBackdrop.addEventListener("click", closeCinemaModal);
+
+if (modalShareBtn) {
+  modalShareBtn.addEventListener("click", () => {
+    if (currentClip) shareClip(currentClip);
+  });
+}
+
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Escape" && cinemaModal.classList.contains("active")) {
+    closeCinemaModal();
+  }
+});
+
+/* ==========================================================================
+   7. TOAST & SHARING
+   ========================================================================== */
+function showToast(msg) {
+  if (toastMessage) toastMessage.textContent = msg;
+  if (toastBox) {
+    toastBox.classList.add("show");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => {
+      toastBox.classList.remove("show");
+    }, 2400);
+  }
+}
+
+function shareClip(clip) {
+  const url = `https://www.youtube.com/watch?v=${clip.youtubeId}`;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(url).then(() => {
+      showToast("YouTube link copied!");
+    }).catch(() => {
+      showToast("Clip: " + clip.title);
+    });
+  } else {
+    showToast("Clip: " + clip.title);
+  }
+}
+
+/* ==========================================================================
+   8. SCROLL CONTAINER SPY, SMOOTH ANCHOR NAV & INTERSECTION OBSERVER
+   ========================================================================== */
+const scrollContainer = document.querySelector(".scroll-container");
+const navLinks = document.querySelectorAll(".nav-link");
+
+// Smooth scroll to target section inside .scroll-container
+document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+  anchor.addEventListener("click", function (e) {
+    const targetId = this.getAttribute("href");
+    if (targetId && targetId !== "#") {
+      const targetEl = document.querySelector(targetId);
+      if (targetEl) {
+        e.preventDefault();
+        targetEl.scrollIntoView({ behavior: "smooth" });
       }
-    });
-  });
-
-  // Clicking anywhere outside cards removes active focus
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.creator-card')) {
-      creatorCards.forEach(c => c.classList.remove('is-active'));
     }
   });
+});
 
+if (scrollContainer) {
+  scrollContainer.addEventListener("scroll", () => {
+    const scrollPos = scrollContainer.scrollTop + 150;
+    const sections = document.querySelectorAll(".v-section");
 
-  /* ----------------------------------------------------------------------------
-     4. GRACEFUL VIDEO ERROR / FALLBACK HANDLING
-     ---------------------------------------------------------------------------- */
-  const bgVideos = document.querySelectorAll('.bg-video');
-  bgVideos.forEach((video) => {
-    // If video fails to load (e.g., bg2.mp4 or bg3.mp4 not present in folder),
-    // hide the video tag cleanly so the dark-warm gradient fallback shows seamlessly.
-    video.addEventListener('error', () => {
-      video.style.display = 'none';
-    });
+    sections.forEach((sec) => {
+      const top = sec.offsetTop;
+      const height = sec.offsetHeight;
+      const id = sec.getAttribute("id");
 
-    // Ensure loop playback continues smoothly
-    video.addEventListener('ended', () => {
-      video.currentTime = 0;
-      video.play().catch(() => {});
-    });
-  });
-
-
-  /* ----------------------------------------------------------------------------
-     5. SEAMLESS BACKGROUND MUSIC (Smart Autoplay & Navbar Toggle)
-     ---------------------------------------------------------------------------- */
-  const bgMusic = document.getElementById('bg-music');
-  const musicToggleBtn = document.getElementById('musicToggleBtn');
-  const musicIcon = document.getElementById('musicIcon');
-
-  let isMusicPlaying = false;
-  let userInteracted = false;
-
-  // Set default volume to smooth, pleasant level (0.4)
-  if (bgMusic) {
-    bgMusic.volume = 0.4;
-  }
-
-  function updateMusicUI(playing) {
-    isMusicPlaying = playing;
-    if (musicToggleBtn) {
-      musicToggleBtn.classList.toggle('is-playing', playing);
-      musicToggleBtn.setAttribute('title', playing ? 'Mute Music' : 'Play Music');
-      musicToggleBtn.setAttribute('aria-label', playing ? 'Mute background music' : 'Play background music');
-    }
-    if (musicIcon) {
-      musicIcon.className = playing ? 'fa-solid fa-volume-high music-icon' : 'fa-solid fa-volume-xmark music-icon';
-    }
-  }
-
-  function playMusic() {
-    if (!bgMusic) return;
-    bgMusic.volume = 0.4;
-    const playPromise = bgMusic.play();
-    if (playPromise !== undefined) {
-      playPromise
-        .then(() => {
-          updateMusicUI(true);
-        })
-        .catch((err) => {
-          // Playback blocked by browser policy or audio file not loaded yet
-          console.log('Background audio playback pending user interaction or file placement:', err.message);
-          updateMusicUI(false);
+      if (scrollPos >= top && scrollPos < top + height) {
+        navLinks.forEach((link) => {
+          link.classList.toggle("active", link.dataset.section === id);
         });
-    }
-  }
-
-  function pauseMusic() {
-    if (!bgMusic) return;
-    bgMusic.pause();
-    updateMusicUI(false);
-  }
-
-  // Smart Autoplay: Trigger on first user interaction (click, touch, scroll, keydown, wheel)
-  function handleFirstInteraction() {
-    if (userInteracted) return;
-    userInteracted = true;
-
-    // Clean up one-time interaction listeners
-    ['click', 'touchstart', 'scroll', 'wheel', 'keydown'].forEach((evt) => {
-      window.removeEventListener(evt, handleFirstInteraction, { capture: true });
-      if (scrollContainer) {
-        scrollContainer.removeEventListener(evt, handleFirstInteraction, { capture: true });
       }
     });
+  }, { passive: true });
+}
 
-    playMusic();
+// Background Video Observer (pauses background videos when scrolled away)
+function setupVideoObserver() {
+  const videos = document.querySelectorAll(".section-bg-video");
+  if ("IntersectionObserver" in window) {
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.play().catch(() => {});
+        } else {
+          entry.target.pause();
+        }
+      });
+    }, { threshold: 0.2 });
+
+    videos.forEach((v) => obs.observe(v));
   }
+}
 
-  // Register interaction listeners on window and scroll container
-  ['click', 'touchstart', 'scroll', 'wheel', 'keydown'].forEach((evt) => {
-    window.addEventListener(evt, handleFirstInteraction, { capture: true, passive: true });
-  });
-
-  if (scrollContainer) {
-    ['scroll', 'wheel', 'touchstart'].forEach((evt) => {
-      scrollContainer.addEventListener(evt, handleFirstInteraction, { capture: true, passive: true });
-    });
-  }
-
-  // Navbar Toggle Button Click: Manual Mute / Unmute
-  if (musicToggleBtn) {
-    musicToggleBtn.addEventListener('click', (e) => {
-      e.stopPropagation();
-      userInteracted = true; // Mark as interacted so autoplay doesn't re-trigger
-      if (isMusicPlaying) {
-        pauseMusic();
-      } else {
-        playMusic();
-      }
-    });
-  }
-
-  // Sync state if audio plays or pauses through other means
-  if (bgMusic) {
-    bgMusic.addEventListener('play', () => updateMusicUI(true));
-    bgMusic.addEventListener('pause', () => updateMusicUI(false));
-  }
-
-})();
+/* ==========================================================================
+   9. INITIALIZE
+   ========================================================================== */
+document.addEventListener("DOMContentLoaded", () => {
+  renderClips(CLIPS_DATA);
+  setupVideoObserver();
+});

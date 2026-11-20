@@ -2,453 +2,275 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
-  <title>NIRAJ — Video Editor</title>
-  <meta name="description" content="Portfolio of Niraj — High-impact, retention-focused video editor for creators and brands.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+  <title>GTA VI CLIPS — Viral Moments & Stunts</title>
+  <meta name="description" content="Ultra-clean viral GTA 6 clips, stunts, and creator highlights hub.">
+  <meta name="theme-color" content="#07080e">
 
-  <!-- Google Fonts: Bebas Neue (The Batman Cinema Title), Anton, Space Grotesk & Plus Jakarta Sans -->
+  <!-- Google Fonts: Outfit & Plus Jakarta Sans -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Anton&family=Bebas+Neue&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;800;900&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
 
-  <!-- Font Awesome Icons (Socials & Stars) -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <!-- Font Awesome 6 Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" integrity="sha512-DTOQO9RWCH3ppGqcWaEA1BIZOC6xxalwEsw9c2QQeAIftl+Vegovlnee1c9QX4TctnWMn13TZye+giMm8e2LwA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
 
-  <!-- Stylesheet -->
+  <!-- Main Stylesheet -->
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
-  <!-- =========================================================================
-       MINIMAL FLOATING TOP NAVBAR
-       ========================================================================= -->
+  <!-- Audio Element for GTA Music -->
+  <audio id="gta-audio" preload="auto" loop>
+    <source src="gta-music.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Minimal Transparent Glass Navbar -->
   <header class="navbar" id="navbar">
     <div class="nav-container">
-      <a href="#hero" class="nav-logo" aria-label="Niraj Home">NIRAJ</a>
-      <div class="nav-right">
-        <nav class="nav-links">
-          <a href="#hero" class="nav-link active" data-index="0">Home</a>
-          <a href="#worked-with" class="nav-link" data-index="1">Worked With</a>
-          <a href="#contact" class="nav-link" data-index="2">Contact</a>
-        </nav>
+      
+      <!-- Sleek Logo -->
+      <a href="#hero" class="nav-brand" aria-label="GTA VI Clips Home">
+        <span class="brand-vi">GTA VI</span>
+        <span class="brand-text">CLIPS</span>
+      </a>
 
-        <!-- Minimal Sleek Sound On/Off Toggle Button -->
-        <button class="music-toggle-btn" id="musicToggleBtn" aria-label="Toggle background music" title="Toggle Sound">
-          <span class="music-bars" id="musicBars">
+      <!-- 3 Section Links -->
+      <nav class="nav-links">
+        <a href="#hero" class="nav-link active" data-section="hero">Home</a>
+        <a href="#clips" class="nav-link" data-section="clips">Clips</a>
+        <a href="#gear" class="nav-link" data-section="gear">Gear &amp; Social</a>
+      </nav>
+
+      <!-- Music Equalizer Toggle -->
+      <div class="nav-actions">
+        <button id="music-toggle" class="music-toggle-btn" aria-label="Toggle Vice City Radio Music" title="Play / Pause GTA Vice City Soundtrack">
+          <div class="equalizer-bars" aria-hidden="true">
             <span class="bar bar-1"></span>
             <span class="bar bar-2"></span>
             <span class="bar bar-3"></span>
             <span class="bar bar-4"></span>
-          </span>
-          <i class="fa-solid fa-volume-xmark music-icon" id="musicIcon"></i>
+          </div>
+          <span class="music-label" id="music-state-label">RADIO</span>
         </button>
       </div>
+
     </div>
   </header>
 
-  <!-- =========================================================================
-       RIGHT VERTICAL SCROLL INDICATOR DOTS
-       ========================================================================= -->
-  <aside class="scroll-dots" aria-label="Section indicator">
-    <button class="dot-btn active" data-index="0" aria-label="Go to Section 1: Home">
-      <span class="dot-label">Home</span>
-    </button>
-    <button class="dot-btn" data-index="1" aria-label="Go to Section 2: Worked With">
-      <span class="dot-label">Worked With</span>
-    </button>
-    <button class="dot-btn" data-index="2" aria-label="Go to Section 3: Contact">
-      <span class="dot-label">Contact</span>
-    </button>
-  </aside>
+  <!-- Main Scroll-Snap Container -->
+  <main class="scroll-container">
 
-  <!-- =========================================================================
-       FULL-SCREEN VERTICAL SCROLL-SNAP CONTAINER
-       ========================================================================= -->
-  <main class="scroll-container" id="scrollContainer">
-
-    <!-- -----------------------------------------------------------------------
-         SECTION 1: HERO POSTER (Background: bg1.mp4)
-         ----------------------------------------------------------------------- -->
-    <section class="snap-section section-hero" id="hero">
-      <!-- Full-screen Seamless Background Video (bg1.mp4) -->
-      <div class="video-bg-wrap">
-        <video class="bg-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+    <!-- ===================================================================== -->
+    <!-- SECTION 1: MINIMAL HERO (bg1.mp4)                                     -->
+    <!-- ===================================================================== -->
+    <section id="hero" class="v-section">
+      <!-- Background Video with Light Tint (rgba(0,0,0,0.25)) -->
+      <div class="video-bg-container">
+        <video class="section-bg-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
           <source src="bg1.mp4" type="video/mp4">
         </video>
-        <!-- Subtle dark vignette so text is crisp and video stays vibrant -->
-        <div class="video-overlay overlay-subtle"></div>
+        <div class="video-tint-overlay"></div>
       </div>
 
-      <!-- Minimal Foreground: 3D Mouse Parallax 'The Batman' Style Title -->
-      <div class="hero-foreground">
-        <div class="hero-3d-wrapper" id="hero3dWrapper">
-          <h1 class="batman-title" id="heroTitle">
-            <span class="batman-line line-top">NIRAJ</span>
-            <span class="batman-line line-bottom">EDITS</span>
-          </h1>
-          <span class="hero-tag">VIDEO EDITOR</span>
-        </div>
+      <!-- Center Content: Only Title + 1 Glass Button -->
+      <div class="hero-center-content">
+        <h1 class="hero-title">GTA VI CLIPS</h1>
+        <a href="#clips" class="btn-hero-glass">
+          <i class="fa-solid fa-play"></i>
+          <span>Watch Clips</span>
+        </a>
       </div>
 
-      <!-- Subtle Scroll Down Indicator -->
-      <a href="#worked-with" class="scroll-hint" aria-label="Scroll to Worked With">
-        <span class="hint-text">EXPLORE</span>
-        <i class="fa-solid fa-chevron-down hint-arrow"></i>
+      <!-- Minimal Scroll Arrow -->
+      <a href="#clips" class="scroll-arrow" aria-label="Scroll to Clips">
+        <i class="fa-solid fa-chevron-down"></i>
       </a>
     </section>
 
-    <!-- -----------------------------------------------------------------------
-         SECTION 2: 'WORKED WITH' OVERLAPPING TILTED CARD DECK (bg2.mp4 + fallback)
-         ----------------------------------------------------------------------- -->
-    <section class="snap-section section-worked" id="worked-with">
-      <!-- Full-screen Background Video (bg2.mp4) with Dark-Warm Gradient Fallback -->
-      <div class="video-bg-wrap">
-        <video class="bg-video fallback-capable" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+    <!-- ===================================================================== -->
+    <!-- SECTION 2: COMPACT GLASS CONTAINER FOR CLIPS (bg2.mp4)                -->
+    <!-- ===================================================================== -->
+    <section id="clips" class="v-section">
+      <!-- Background Video with Light Tint (rgba(0,0,0,0.25)) -->
+      <div class="video-bg-container">
+        <video class="section-bg-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
           <source src="bg2.mp4" type="video/mp4">
         </video>
-        <div class="video-overlay overlay-medium"></div>
+        <div class="video-tint-overlay"></div>
       </div>
 
-      <!-- Section Content -->
-      <div class="section-content">
-        <div class="section-header">
-          <h2 class="section-title">Worked With</h2>
-          <p class="section-subtitle">Collaborated with top creators to craft high-retention content</p>
-        </div>
+      <!-- Centered Compact Frosted-Glass Container -->
+      <div class="clips-glass-modal-box">
+        
+        <!-- Compact Top Filter & Search Bar -->
+        <div class="glass-box-header">
+          <div class="compact-filter-pills" id="filter-pills">
+            <button class="c-pill active" data-category="all">All</button>
+            <button class="c-pill" data-category="viral-moments">Viral</button>
+            <button class="c-pill" data-category="top-creators">Creators</button>
+            <button class="c-pill" data-category="funny-fails">Fails</button>
+            <button class="c-pill" data-category="insane-stunts">Stunts</button>
+          </div>
 
-        <!-- Overlapping Tilted Card Deck (6 Square Creator Cards) -->
-        <div class="card-deck-container">
-          <div class="card-deck" id="cardDeck">
-
-            <!-- 
-              ===================================================================
-              [CREATOR CARD 1]
-              Update image: replace avatar1.jpg (or drop avatar1.jpg into folder)
-              Update info: Name, handle, subscriber count, and channel URL
-              ===================================================================
-            -->
-            <article class="creator-card tilt-1" tabindex="0">
-              <div class="card-inner">
-                <!-- Creator Photo (with fallback styling) -->
-                <div class="creator-photo-box">
-                  <img src="avatar1.jpg" alt="Alex Rivers" class="creator-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div class="creator-img-fallback fallback-gradient-1">
-                    <span class="fallback-initial">AR</span>
-                  </div>
-                </div>
-
-                <!-- Hover / Tap Pop-up Reveal Overlay -->
-                <div class="creator-reveal">
-                  <div class="reveal-avatar-mini">
-                    <span class="mini-initial">AR</span>
-                  </div>
-                  <h3 class="creator-name">Alex Rivers</h3>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="creator-handle">@alexrivers</a>
-                  <span class="sub-badge">
-                    <i class="fa-brands fa-youtube"></i> 2.4M Subscribers
-                  </span>
-                </div>
-              </div>
-            </article>
-
-            <!-- 
-              ===================================================================
-              [CREATOR CARD 2]
-              ===================================================================
-            -->
-            <article class="creator-card tilt-2" tabindex="0">
-              <div class="card-inner">
-                <div class="creator-photo-box">
-                  <img src="avatar2.jpg" alt="Kyoto Vlogs" class="creator-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div class="creator-img-fallback fallback-gradient-2">
-                    <span class="fallback-initial">KV</span>
-                  </div>
-                </div>
-
-                <div class="creator-reveal">
-                  <div class="reveal-avatar-mini">
-                    <span class="mini-initial">KV</span>
-                  </div>
-                  <h3 class="creator-name">Kyoto Vlogs</h3>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="creator-handle">@kyotovlogs</a>
-                  <span class="sub-badge">
-                    <i class="fa-brands fa-youtube"></i> 1.8M Subscribers
-                  </span>
-                </div>
-              </div>
-            </article>
-
-            <!-- 
-              ===================================================================
-              [CREATOR CARD 3]
-              ===================================================================
-            -->
-            <article class="creator-card tilt-3" tabindex="0">
-              <div class="card-inner">
-                <div class="creator-photo-box">
-                  <img src="avatar3.jpg" alt="Liam Vance" class="creator-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div class="creator-img-fallback fallback-gradient-3">
-                    <span class="fallback-initial">LV</span>
-                  </div>
-                </div>
-
-                <div class="creator-reveal">
-                  <div class="reveal-avatar-mini">
-                    <span class="mini-initial">LV</span>
-                  </div>
-                  <h3 class="creator-name">Liam Vance</h3>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="creator-handle">@liamvance</a>
-                  <span class="sub-badge">
-                    <i class="fa-brands fa-youtube"></i> 950K Subscribers
-                  </span>
-                </div>
-              </div>
-            </article>
-
-            <!-- 
-              ===================================================================
-              [CREATOR CARD 4]
-              ===================================================================
-            -->
-            <article class="creator-card tilt-4" tabindex="0">
-              <div class="card-inner">
-                <div class="creator-photo-box">
-                  <img src="avatar4.jpg" alt="Nexus Gaming" class="creator-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div class="creator-img-fallback fallback-gradient-4">
-                    <span class="fallback-initial">NG</span>
-                  </div>
-                </div>
-
-                <div class="creator-reveal">
-                  <div class="reveal-avatar-mini">
-                    <span class="mini-initial">NG</span>
-                  </div>
-                  <h3 class="creator-name">Nexus Gaming</h3>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="creator-handle">@nexusgaming</a>
-                  <span class="sub-badge">
-                    <i class="fa-brands fa-youtube"></i> 3.2M Subscribers
-                  </span>
-                </div>
-              </div>
-            </article>
-
-            <!-- 
-              ===================================================================
-              [CREATOR CARD 5]
-              ===================================================================
-            -->
-            <article class="creator-card tilt-5" tabindex="0">
-              <div class="card-inner">
-                <div class="creator-photo-box">
-                  <img src="avatar5.jpg" alt="Sarah Chen" class="creator-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div class="creator-img-fallback fallback-gradient-5">
-                    <span class="fallback-initial">SC</span>
-                  </div>
-                </div>
-
-                <div class="creator-reveal">
-                  <div class="reveal-avatar-mini">
-                    <span class="mini-initial">SC</span>
-                  </div>
-                  <h3 class="creator-name">Sarah Chen</h3>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="creator-handle">@sarahchen</a>
-                  <span class="sub-badge">
-                    <i class="fa-brands fa-youtube"></i> 1.2M Subscribers
-                  </span>
-                </div>
-              </div>
-            </article>
-
-            <!-- 
-              ===================================================================
-              [CREATOR CARD 6]
-              ===================================================================
-            -->
-            <article class="creator-card tilt-6" tabindex="0">
-              <div class="card-inner">
-                <div class="creator-photo-box">
-                  <img src="avatar6.jpg" alt="Dmitri Beats" class="creator-img" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
-                  <div class="creator-img-fallback fallback-gradient-6">
-                    <span class="fallback-initial">DB</span>
-                  </div>
-                </div>
-
-                <div class="creator-reveal">
-                  <div class="reveal-avatar-mini">
-                    <span class="mini-initial">DB</span>
-                  </div>
-                  <h3 class="creator-name">Dmitri Beats</h3>
-                  <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="creator-handle">@dmitribeats</a>
-                  <span class="sub-badge">
-                    <i class="fa-brands fa-youtube"></i> 820K Subscribers
-                  </span>
-                </div>
-              </div>
-            </article>
-
+          <div class="compact-search-wrap">
+            <i class="fa-solid fa-magnifying-glass c-search-icon"></i>
+            <input 
+              type="text" 
+              id="clip-search-input" 
+              class="compact-search-input" 
+              placeholder="Search clips..." 
+              autocomplete="off"
+            >
           </div>
         </div>
+
+        <!-- Scrollable Inner Clips Grid -->
+        <div class="glass-box-body">
+          <div class="compact-clips-grid" id="clips-grid">
+            <!-- Rendered dynamically by script.js -->
+          </div>
+
+          <!-- Empty state if search returns nothing -->
+          <div class="compact-no-results" id="no-results-state" style="display: none;">
+            <p>No clips found</p>
+            <button class="c-pill" id="reset-filter-btn">Reset</button>
+          </div>
+        </div>
+
       </div>
     </section>
 
-    <!-- -----------------------------------------------------------------------
-         SECTION 3: CONTACT & CLIENT RATINGS POSTER (bg3.mp4 + fallback)
-         ----------------------------------------------------------------------- -->
-    <section class="snap-section section-contact" id="contact">
-      <!-- Full-screen Background Video (bg3.mp4) with Dark-Warm Gradient Fallback -->
-      <div class="video-bg-wrap">
-        <video class="bg-video fallback-capable" autoplay muted loop playsinline webkit-playsinline preload="metadata">
+    <!-- ===================================================================== -->
+    <!-- SECTION 3: MINIMAL SOCIAL & GEAR (bg3.mp4)                            -->
+    <!-- ===================================================================== -->
+    <section id="gear" class="v-section">
+      <!-- Background Video with Light Tint (rgba(0,0,0,0.25)) -->
+      <div class="video-bg-container">
+        <video class="section-bg-video" autoplay muted loop playsinline webkit-playsinline preload="metadata">
           <source src="bg3.mp4" type="video/mp4">
         </video>
-        <div class="video-overlay overlay-medium"></div>
+        <div class="video-tint-overlay"></div>
       </div>
 
-      <!-- Section Content: Two Balanced Minimal Columns -->
-      <div class="section-content">
-        <div class="contact-ratings-grid">
+      <!-- Center Minimal Social & Gear Content -->
+      <div class="gear-social-center">
+        
+        <h2 class="minimal-section-title">FOLLOW &amp; GEAR</h2>
 
-          <!-- Left Column: Client Ratings Summary & Reviews -->
-          <div class="panel-box ratings-panel">
-            <div class="rating-header">
-              <div class="score-badge">
-                <span class="score-num">5.0</span>
-                <div class="stars-row">
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                  <i class="fa-solid fa-star"></i>
-                </div>
-              </div>
-              <div class="score-info">
-                <span class="score-title">Client Satisfaction</span>
-                <span class="score-sub">100% on-time delivery across 120+ videos</span>
-              </div>
+        <!-- 3 Compact Glass Social Buttons -->
+        <div class="compact-social-row">
+          <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="social-pill-btn">
+            <i class="fa-brands fa-instagram"></i>
+            <span>Instagram</span>
+          </a>
+          <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" class="social-pill-btn">
+            <i class="fa-brands fa-youtube"></i>
+            <span>YouTube</span>
+          </a>
+          <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="social-pill-btn">
+            <i class="fa-brands fa-x-twitter"></i>
+            <span>X / Twitter</span>
+          </a>
+        </div>
+
+        <!-- 3 Small Sleek Glass Gear Cards -->
+        <div class="compact-gear-grid">
+          
+          <!-- Gear 1: Controller -->
+          <div class="compact-gear-card">
+            <div class="gear-card-icon"><i class="fa-solid fa-gamepad"></i></div>
+            <div class="gear-card-info">
+              <span class="gear-item-name">Pro Controller</span>
+              <span class="gear-item-price">$199</span>
             </div>
-
-            <!-- 3 Minimal Client Review Cards -->
-            <div class="reviews-list">
-              <div class="review-card">
-                <p class="review-quote">"Niraj elevated our watch duration from 35% to 58%. His pacing and audio sound design are simply unmatched."</p>
-                <div class="review-author">
-                  <span class="author-name">Alex Rivers</span>
-                  <span class="author-tag">• 2.4M Subs</span>
-                </div>
-              </div>
-
-              <div class="review-card">
-                <p class="review-quote">"Delivered a fast-paced 20-minute edit in 3 days. Clean cuts, flawless speedramps, and zero revisions needed."</p>
-                <div class="review-author">
-                  <span class="author-name">Nexus Gaming</span>
-                  <span class="author-tag">• Esports & Variety</span>
-                </div>
-              </div>
-
-              <div class="review-card">
-                <p class="review-quote">"Our Shorts hit 15M+ views in two months after bringing Niraj onto our team. He understands hook psychology inside out."</p>
-                <div class="review-author">
-                  <span class="author-name">Sarah Chen</span>
-                  <span class="author-tag">• Tech & Lifestyle</span>
-                </div>
-              </div>
-            </div>
+            <a href="https://amazon.com" target="_blank" rel="noopener noreferrer" class="btn-buy-glass">Buy</a>
           </div>
 
-          <!-- Right Column: Direct Contact Interactive Actions -->
-          <div class="panel-box contact-panel">
-            <div class="contact-header">
-              <h2 class="contact-title">Let's Work</h2>
-              <p class="contact-desc">Ready to scale your channel retention and produce standout edits? Connect directly below.</p>
+          <!-- Gear 2: Headset -->
+          <div class="compact-gear-card">
+            <div class="gear-card-icon"><i class="fa-solid fa-headphones"></i></div>
+            <div class="gear-card-info">
+              <span class="gear-item-name">Spatial Headset</span>
+              <span class="gear-item-price">$179</span>
             </div>
+            <a href="https://amazon.com" target="_blank" rel="noopener noreferrer" class="btn-buy-glass">Buy</a>
+          </div>
 
-            <!-- Sleek Interactive Contact Action Buttons -->
-            <div class="contact-actions-list">
-              <!-- 
-                =================================================================
-                [CONTACT LINK: INSTAGRAM]
-                Replace 'https://instagram.com/yourhandle' with your actual URL
-                =================================================================
-              -->
-              <a href="https://instagram.com" target="_blank" rel="noopener noreferrer" class="contact-btn btn-instagram">
-                <div class="btn-icon">
-                  <i class="fa-brands fa-instagram"></i>
-                </div>
-                <div class="btn-label-group">
-                  <span class="btn-platform">Instagram</span>
-                  <span class="btn-handle">@niraj.edits</span>
-                </div>
-                <i class="fa-solid fa-arrow-up-right-from-square btn-arrow"></i>
-              </a>
-
-              <!-- 
-                =================================================================
-                [CONTACT LINK: WHATSAPP]
-                Replace phone number: 'https://wa.me/1234567890?text=Hi%20Niraj'
-                =================================================================
-              -->
-              <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" class="contact-btn btn-whatsapp">
-                <div class="btn-icon">
-                  <i class="fa-brands fa-whatsapp"></i>
-                </div>
-                <div class="btn-label-group">
-                  <span class="btn-platform">WhatsApp</span>
-                  <span class="btn-handle">Direct Chat & Scoping</span>
-                </div>
-                <i class="fa-solid fa-arrow-up-right-from-square btn-arrow"></i>
-              </a>
-
-              <!-- 
-                =================================================================
-                [CONTACT LINK: X / TWITTER]
-                Replace URL: 'https://x.com/yourhandle'
-                =================================================================
-              -->
-              <a href="https://x.com" target="_blank" rel="noopener noreferrer" class="contact-btn btn-x">
-                <div class="btn-icon">
-                  <i class="fa-brands fa-x-twitter"></i>
-                </div>
-                <div class="btn-label-group">
-                  <span class="btn-platform">X (Twitter)</span>
-                  <span class="btn-handle">@niraj_edits</span>
-                </div>
-                <i class="fa-solid fa-arrow-up-right-from-square btn-arrow"></i>
-              </a>
-
-              <!-- 
-                =================================================================
-                [CONTACT LINK: FACEBOOK]
-                Replace URL: 'https://facebook.com/yourhandle'
-                =================================================================
-              -->
-              <a href="https://facebook.com" target="_blank" rel="noopener noreferrer" class="contact-btn btn-facebook">
-                <div class="btn-icon">
-                  <i class="fa-brands fa-facebook-f"></i>
-                </div>
-                <div class="btn-label-group">
-                  <span class="btn-platform">Facebook</span>
-                  <span class="btn-handle">Niraj Edits</span>
-                </div>
-                <i class="fa-solid fa-arrow-up-right-from-square btn-arrow"></i>
-              </a>
+          <!-- Gear 3: Capture Card -->
+          <div class="compact-gear-card">
+            <div class="gear-card-icon"><i class="fa-solid fa-video"></i></div>
+            <div class="gear-card-info">
+              <span class="gear-item-name">4K Capture Card</span>
+              <span class="gear-item-price">$249</span>
             </div>
-
-            <!-- Minimalist Footer Signature -->
-            <footer class="contact-footer-note">
-              <span>&copy; NIRAJ. All rights reserved.</span>
-              <span>Available for Select Creator Retainers</span>
-            </footer>
+            <a href="https://amazon.com" target="_blank" rel="noopener noreferrer" class="btn-buy-glass">Buy</a>
           </div>
 
         </div>
+
+        <!-- Minimal 1-Line Footer -->
+        <footer class="minimal-footer">
+          <span>Fan hub. Clips belong to respective creators • &copy; 2026 GTA VI CLIPS</span>
+          <a href="#hero" class="footer-top-link" aria-label="Back to top">Top <i class="fa-solid fa-arrow-up"></i></a>
+        </footer>
+
       </div>
     </section>
 
   </main>
 
-  <!-- Hidden Background Music Player (Preload & Loop) -->
-  <audio id="bg-music" src="music.mp3" loop preload="auto"></audio>
+  <!-- ========================================================================= -->
+  <!-- CINEMA MODE YOUTUBE MODAL                                                 -->
+  <!-- ========================================================================= -->
+  <div class="cinema-modal" id="cinema-modal" role="dialog" aria-modal="true" style="display: none;">
+    <div class="modal-backdrop" id="modal-backdrop"></div>
+    <div class="modal-dialog">
+      <div class="modal-card">
+        
+        <div class="modal-header">
+          <span class="modal-title" id="modal-clip-title">Clip Title</span>
+          <button class="modal-close-btn" id="modal-close-btn" aria-label="Close modal">
+            <i class="fa-solid fa-xmark"></i>
+          </button>
+        </div>
 
-  <!-- Script -->
+        <div class="modal-player-wrapper">
+          <div class="modal-player-aspect">
+            <iframe 
+              id="youtube-player-frame" 
+              src="" 
+              title="GTA VI YouTube Player" 
+              frameborder="0" 
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
+              allowfullscreen>
+            </iframe>
+          </div>
+        </div>
+
+        <div class="modal-footer">
+          <div class="modal-creator-tag" id="modal-creator-tag">@Creator</div>
+          <div class="modal-footer-btns">
+            <button class="btn-modal-action" id="modal-share-btn">
+              <i class="fa-solid fa-share-nodes"></i> Share
+            </button>
+            <a href="#" target="_blank" rel="noopener noreferrer" class="btn-modal-action" id="modal-youtube-link">
+              <i class="fa-brands fa-youtube"></i> YouTube
+            </a>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div class="toast-box" id="toast-box">
+    <i class="fa-solid fa-check"></i>
+    <span id="toast-message">Copied clip link!</span>
+  </div>
+
+  <!-- Main JavaScript File -->
   <script src="script.js"></script>
 </body>
 </html>
